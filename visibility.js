@@ -1,5 +1,6 @@
 /**
  * Author: Jason Farrell
+ *         Willian Massami Watanabe (just included jQuery usage)
  * Author URI: http://useallfive.com/
  *
  * Description: Checks if a DOM element is truly visible.
@@ -55,12 +56,12 @@ Element.prototype.isVisible = function() {
             'undefined' === typeof(w) ||
             'undefined' === typeof(h)
         ) {
-            t = el.offsetTop;
-            l = el.offsetLeft;
-            b = t + el.offsetHeight;
-            r = l + el.offsetWidth;
-            w = el.offsetWidth;
-            h = el.offsetHeight;
+            t = $(el).offset().top;
+            l = $(el).offset().left;
+            b = t + $(el).offset().height;
+            r = l + $(el).offset().width;
+            w = $(el).offset().width;
+            h = $(el).offset().height;
         }
         //-- If we have a parent, let's continue:
         if ( p ) {
@@ -69,22 +70,17 @@ Element.prototype.isVisible = function() {
                 //-- Only check if the offset is different for the parent
                 if (
                     //-- If the target element is to the right of the parent elm
-                    l + VISIBLE_PADDING > p.offsetWidth + p.scrollLeft ||
+                    l + VISIBLE_PADDING > $(p).offset().width + $(p).offset().left ||
                     //-- If the target element is to the left of the parent elm
-                    l + w - VISIBLE_PADDING < p.scrollLeft ||
+                    l + w - VISIBLE_PADDING < $(p).offset().left ||
                     //-- If the target element is under the parent elm
-                    t + VISIBLE_PADDING > p.offsetHeight + p.scrollTop ||
+                    t + VISIBLE_PADDING > $(p).offset().height + $(p).offset().top ||
                     //-- If the target element is above the parent elm
-                    t + h - VISIBLE_PADDING < p.scrollTop
+                    t + h - VISIBLE_PADDING < $(p).offset().top
                 ) {
                     //-- Our target element is out of bounds:
                     return false;
                 }
-            }
-            //-- Add the offset parent's left/top coords to our element's offset:
-            if ( el.offsetParent === p ) {
-                l += p.offsetLeft;
-                t += p.offsetTop;
             }
             //-- Let's recursively check upwards:
             return _isVisible(p, t, r, b, l, w, h);
